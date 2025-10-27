@@ -1,39 +1,15 @@
-// app/students/page.js
-import { Table, Button } from 'antd'
-import Link from 'next/link'
+import StudentsTable from "./StudentsTable";
 
-export const dynamic = 'force-static' // SSG
+export const revalidate = 60; // optional, revalidate every 60s
 
 export default async function StudentsPage() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/users', {
-    cache: 'force-cache',
-  })
-  const users = await res.json()
-
-  const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'City', dataIndex: ['address', 'city'], key: 'city' },
-    {
-      title: 'Details',
-      key: 'details',
-      render: (_, record) => (
-        <Link href={`/students/${record.id}`}>
-          <Button type="primary">Details</Button>
-        </Link>
-      ),
-    },
-  ]
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  const students = await res.json();
 
   return (
-    <div>
-      <h2>Students List</h2>
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={users}
-        pagination={{ pageSize: 5 }}
-      />
+    <div style={{ padding: "20px" }}>
+      <h1>Students List</h1>
+      <StudentsTable students={students} />
     </div>
-  )
+  );
 }
